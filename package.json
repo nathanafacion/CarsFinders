@@ -1,0 +1,24 @@
+{
+  "name": "genkit-chat-react",
+  "version": "1.0.0",
+  "description": "Chat interface com Genkit AI usando React e Styled Components",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "server": "node server/index.js",
+    "server:dev": "nodemon server/index.js",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "styled-components": "^6.1.8",
+    "genkit": "latest",
+    "@genkit-ai/google-genai": "latest"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.0"
+  }
+}
