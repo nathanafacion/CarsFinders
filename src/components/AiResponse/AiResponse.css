@@ -1,0 +1,19 @@
+.ai-response-container {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f1f8e9;
+  border: 1px solid #c8e6c9;
+  border-radius: 8px;
+}
+
+.ai-response-title {
+  color: #2e7d32;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.ai-response-text {
+  color: #333;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}

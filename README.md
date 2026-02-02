@@ -90,3 +90,16 @@ Contribuições são bem-vindas! Sinta-se livre para abrir issues ou pull reques
 ## 📄 Licença
 
 MIT
+
+## 🔎 Como criar o índice vetorial no Firestore
+
+1. Acesse o [Console do Firebase](https://console.firebase.google.com/), vá para Firestore Database.
+2. Clique em "Indexes" > "Vector Indexes" (ou "Índices Vetoriais").
+3. Clique em "Create Index" (Criar Índice).
+   - Coleção: `cars`
+   - Campo: `embedding`
+   - Dimensão: (deve ser igual ao tamanho do vetor retornado pelo modelo, ex: 768)
+   - Tipo: `float[]`
+4. Salve e aguarde a indexação ser concluída.
+
+> **Importante:** O campo `embedding` será criado automaticamente pelo script de migração. Certifique-se de que todos os documentos da coleção `cars` possuem esse campo preenchido.
