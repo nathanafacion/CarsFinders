@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const data = require('./carsDatabase.js');
+const data = require('./db/carsDatabase.js');
 
 const transformed = data.map(car => ({
 

@@ -239,7 +239,6 @@ export default function CarSearch() {
             CarFinder
             <CarIcon>🚗</CarIcon>
           </Title>
-          <Subtitle>Encontre o carro dos seus sonhos</Subtitle>
         </Header>
 
         <SearchContainer>

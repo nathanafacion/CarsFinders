@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const carsDatabase = require('./carsDatabase');
+const carsDatabase = require('./db/carsDatabase');
 const { genkit } = require('genkit');
 const { googleAI } = require('@genkit-ai/google-genai');
 
@@ -20,16 +20,43 @@ app.post('/api/generate', async (req, res) => {
     const { prompt } = req.body;
     if (!prompt) return res.status(400).json({ error: 'Prompt is required' });
 
-    // Preparar contexto para a IA com o banco de dados completo
-    const context = `Banco de dados de carros (JSON):\n${JSON.stringify(carsDatabase)}\n\n`;
+    // Schema Zod-like para carros
+    const schema = `
+      [
+        {
+          "marca": string,
+          "modelo": string,
+          "combustivel": string,
+          "cambio": string,
+          "motor": number,
+          "ano": number,
+          "preco_medio_brl": number
+        }
+      ]
+    `;
 
-    // Usar IA para gerar resposta baseada no banco de dados
+    // Contexto e instrução para resposta JSON
+    const context = `Banco de dados de carros (JSON):\n${JSON.stringify(carsDatabase)}\n\n`;
+    const systemPrompt = `
+      Responda APENAS com um array JSON de carros, SEM EXPLICAÇÃO, seguindo exatamente o seguinte schema:
+      ${schema}
+      Cada objeto deve conter apenas as chaves do schema. Não inclua comentários, texto extra ou explicações.
+      Pergunta do usuário: ${prompt}
+    `;
+
     const { text } = await ai.generate({
       model: googleAI.model('gemini-2.5-flash'),
-      prompt: `${context}Pergunta do usuário: ${prompt}\n\nUse o banco de dados fornecido para responder à pergunta do usuário sobre carros. Faça buscas, comparações e forneça informações precisas baseadas nos dados. Responda de forma útil e amigável.`
+      prompt: context + systemPrompt
     });
 
-    res.json({ text });
+    // Tenta fazer parse do JSON retornado
+    let cars = [];
+    try {
+      cars = JSON.parse(text);
+    } catch (e) {
+      return res.status(200).json({ text, error: 'A resposta não pôde ser convertida em JSON.' });
+    }
+    res.json({ cars });
   } catch (err) {
     console.error('Error in /api/generate:', err);
     res.status(500).json({ error: err.message || 'Internal server error' });

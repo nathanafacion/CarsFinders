@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import GenkitChatUI from './GenkitChatUI';
+import GenkitChatUI from '../GenkitChatUI/GenkitChatUI';
 
 export default function GenkitChat() {
   const [messages, setMessages] = useState([
