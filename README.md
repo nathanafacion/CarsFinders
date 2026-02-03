@@ -1,36 +1,47 @@
-# 🚀 Genkit Chat - React + Styled Components
 
-Interface moderna de chat integrada com Genkit AI usando React e Styled Components.
+# 🚗 CarFinder AI – Busca de Carros com IA, Firestore e Genkit
 
-## ✨ Características
+CarFinder AI é uma aplicação fullstack que permite buscar carros por marca, modelo ou ano, utilizando inteligência artificial (RAG com Genkit + Gemini) e banco de dados Firestore. O frontend é feito em React com styled-components, proporcionando uma experiência moderna, responsiva e profissional.
 
-- 🎨 **Design moderno** com styled-components
-- ⚡ **Animações fluidas** e micro-interações
-- 🌙 **Tema escuro futurista** com gradientes e glassmorphism
-- 🔄 **Integração completa** com Genkit e Gemini 2.5 Flash
-- 📱 **Responsivo** e otimizado para todos os dispositivos
-- 🎯 **TypeScript-ready** (pode ser facilmente convertido)
+## ✨ Funcionalidades
+
+- 🔎 Busca inteligente de carros por texto (marca, modelo, ano)
+- 🤖 Respostas geradas por IA (Genkit + Gemini 2.5 Flash)
+- 🗃️ Dados reais de carros salvos no Firestore
+- 🧠 RAG (Retrieval-Augmented Generation) para contexto relevante
+- 🎨 Frontend React moderno com styled-components
+- 📱 Totalmente responsivo e pronto para produção
 
 ## 🛠️ Tecnologias
 
 - React 18
 - Styled Components
+- Node.js + Express
 - Genkit AI
-- Google AI (Gemini)
+- Google Gemini (via Genkit)
+- Firestore (Firebase)
 - Vite
 
-## 📦 Instalação
+## 📦 Instalação e Uso
 
 ```bash
-# Instalar dependências
-npm install
-
-# Ou com yarn
+# Instale as dependências (raiz e /server)
 yarn install
+yarn --cwd server install
 
-# Ou com pnpm
-pnpm install
+# Popule o Firestore com os dados de carros (opcional, só na primeira vez)
+cd server
+node helpers/chunkFirebase.js
+cd ..
+
+# Rode o backend (porta 4000)
+yarn --cwd server dev
+
+# Rode o frontend (porta 3000)
+yarn dev
 ```
+
+O frontend estará em http://localhost:3000 e o backend em http://localhost:4000
 
 ## 🚀 Como usar
 
