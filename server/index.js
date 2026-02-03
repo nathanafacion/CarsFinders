@@ -1,17 +1,3 @@
-// Script para popular o Firestore com os dados do carsDatabase.js
-async function populateFirestoreCars() {
-  const batch = db.batch();
-  const collectionRef = db.collection('cars');
-  for (let i = 0; i < carsDatabase.length; i++) {
-    const docRef = collectionRef.doc();
-    batch.set(docRef, carsDatabase[i]);
-  }
-  await batch.commit();
-  console.log('Firestore populado com os carros!');
-}
-
-// Descomente a linha abaixo para rodar a população uma vez
-// populateFirestoreCars();
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -34,36 +20,8 @@ if (!admin.apps.length) {
 }
 const db = admin.firestore();
 
-// Fragmentação do JSON (chunking)
-function chunkCars(cars, chunkSize = 1) {
-  // Divide o array de carros em chunks de tamanho chunkSize
-  const chunks = [];
-  for (let i = 0; i < cars.length; i += chunkSize) {
-    chunks.push(JSON.stringify(cars.slice(i, i + chunkSize)));
-  }
-  return chunks;
-}
-
-
-
-// Indexação Firestore: salva cada carro como documento na coleção 'cars'
-async function indexCarsDatabaseFirestore() {
-  const batch = db.batch();
-  const collectionRef = db.collection('cars');
-  for (let i = 0; i < carsDatabase.length; i++) {
-    const docRef = collectionRef.doc();
-    batch.set(docRef, carsDatabase[i]);
-  }
-  await batch.commit();
-  console.log('Indexação dos carros no Firestore concluída!');
-}
-
-
-
-// Inicializa servidor só após indexação Firestore
-async function startServer() {
-  await indexCarsDatabaseFirestore();
-
+// Inicializa servidor normalmente
+function startServer() {
   const app = express();
   const PORT = process.env.PORT || 4000;
 
@@ -112,7 +70,7 @@ async function startServer() {
       `;
 
       const { text } = await ai.generate({
-        model: googleAI.model('gemini-2.5-flash-lite'),
+        model: googleAI.model('gemini-2.5-flash'),
         prompt: context + systemPrompt
       });
 
@@ -130,9 +88,6 @@ async function startServer() {
     }
   });
 
-  app.get('/api/cars', (req, res) => {
-    res.json(carsDatabase);
-  });
 
   app.listen(PORT, () => {
     console.log(`Server listening on http://localhost:${PORT}`);
