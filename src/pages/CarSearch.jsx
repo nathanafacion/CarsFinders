@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './CarSearch.css';
 import CarSearchForm from '../components/CarSearchForm/CarSearchForm';
 import CarResults from '../components/CarResults/CarResults';
 import AiResponse from '../components/AiResponse/AiResponse';
@@ -58,16 +59,16 @@ export default function CarSearch() {
 	};
 
 	return (
-		<div style={{ minHeight: '100vh', background: '#fff', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 20 }}>
-			<header style={{ width: '100%', maxWidth: 1200, padding: '20px 0', textAlign: 'center', marginBottom: 20 }}>
-				<h1 style={{ fontSize: 48, color: '#1b5e20', fontWeight: 300, marginBottom: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, lineHeight: 1 }}>
-					CarFinder <span style={{ fontSize: 64, color: '#4caf50', display: 'flex', alignItems: 'center', lineHeight: 1 }}>🚗</span>
+		<div className="carsearch-container">
+			<header className="carsearch-header">
+				<h1 className="carsearch-title">
+					CarFinder <span className="carsearch-title-icon">🚗</span>
 				</h1>
 			</header>
 			<CarSearchForm searchQuery={searchQuery} setSearchQuery={setSearchQuery} handleSearch={handleSearch} />
-			{isLoading && <div style={{ textAlign: 'center', color: '#5f6368', fontSize: 16, marginTop: 20 }}>Buscando carros...</div>}
+			{isLoading && <div className="carsearch-loading">Buscando carros...</div>}
 			{hasSearched && !isLoading && results.length === 0 && !aiResponse && (
-				<div style={{ textAlign: 'center', color: '#5f6368', fontSize: 16, marginTop: 40 }}>Nenhum carro encontrado para sua busca.</div>
+				<div className="carsearch-empty">Nenhum carro encontrado para sua busca.</div>
 			)}
 			<CarResults results={results} />
 			<AiResponse aiResponse={aiResponse} />

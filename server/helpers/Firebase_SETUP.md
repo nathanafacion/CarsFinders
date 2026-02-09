@@ -23,6 +23,13 @@ No mesmo terminal onde você vai rodar o backend, execute:
 $env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\nathana\credencial-firebase.json"
 ```
 
+**Lembrete:** Sempre entre na pasta `server` antes de rodar o backend e defina a variável de credencial no mesmo terminal:
+
+```powershell
+cd server
+$env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\nathana\credencial-firebase.json"
+```
+
 ## 5. Ajustar o código (já feito)
 - O backend já está configurado para usar o Firestore e a credencial.
 - O projectId está explícito no código: `carfinder-3aeec`

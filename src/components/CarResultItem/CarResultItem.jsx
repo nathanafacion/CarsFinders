@@ -1,18 +1,17 @@
 import React from 'react';
-
-import { Item, Title, Details, Label, Value, Price } from './CarResultItem.styles';
+import './CarResultItem.css';
 
 export default function CarResultItem({ car }) {
   return (
-    <Item>
-      <Title>{car.marca} {car.modelo}</Title>
-      <Details>
-        <span><Label>Combustível:</Label> <Value>{car.combustivel}</Value></span>
-        <span><Label>Câmbio:</Label> <Value>{car.cambio}</Value></span>
-        <span><Label>Motor:</Label> <Value>{car.motor}</Value></span>
-        <span><Label>Ano:</Label> <Value>{car.ano}</Value></span>
-      </Details>
-      <Price>R$ {car.preco_medio_brl.toLocaleString('pt-BR')}</Price>
-    </Item>
+    <div className="car-result-item">
+      <div className="car-result-item__title">{car.marca} {car.modelo}</div>
+      <div className="car-result-item__details">
+        <span><span className="car-result-item__label">Combustível:</span> <span className="car-result-item__value">{car.combustivel}</span></span>
+        <span><span className="car-result-item__label">Câmbio:</span> <span className="car-result-item__value">{car.cambio}</span></span>
+        <span><span className="car-result-item__label">Motor:</span> <span className="car-result-item__value">{car.motor}</span></span>
+        <span><span className="car-result-item__label">Ano:</span> <span className="car-result-item__value">{car.ano}</span></span>
+      </div>
+      <span className="car-result-item__price">R$ {car.preco_medio_brl.toLocaleString('pt-BR')}</span>
+    </div>
   );
 }

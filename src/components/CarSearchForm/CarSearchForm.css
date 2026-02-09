@@ -1,4 +1,4 @@
-.car-search-form {
+ .car-search-form {
   display: flex;
   position: relative;
   width: 100%;
@@ -6,7 +6,7 @@
   margin-bottom: 40px;
 }
 
-.car-search-input {
+.car-search-form__input {
   width: 100%;
   height: 44px;
   padding: 0 48px 0 16px;
@@ -17,16 +17,16 @@
   box-shadow: 0 1px 6px rgba(76, 175, 80, 0.28);
 }
 
-.car-search-input:hover {
+.car-search-form__input:hover {
   box-shadow: 0 2px 8px rgba(76, 175, 80, 0.28);
 }
 
-.car-search-input:focus {
+.car-search-form__input:focus {
   box-shadow: 0 2px 8px rgba(76, 175, 80, 0.28);
   border-color: #2e7d32;
 }
 
-.car-search-button {
+.car-search-form__button {
   position: absolute;
   right: 8px;
   top: 50%;

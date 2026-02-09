@@ -1,0 +1,20 @@
+/* AiResponse.css */
+
+ .ai-response {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f1f8e9;
+  border: 1px solid #c8e6c9;
+  border-radius: 12px;
+}
+.ai-response__title {
+  color: #2e7d32;
+  margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+.ai-response__text {
+  color: #333;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}

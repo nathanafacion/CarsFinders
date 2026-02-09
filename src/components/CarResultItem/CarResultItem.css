@@ -1,0 +1,58 @@
+/* CarResultItem.css */
+
+ .car-result-item {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 2px solid #2e7d32;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+}
+.car-result-item:hover {
+  box-shadow: 0 4px 16px rgba(46,125,50,0.15);
+  transform: translateY(-2px);
+  border-color: #1b5e20;
+}
+.car-result-item__title {
+  font-size: 24px;
+  color: #2e7d32;
+  font-weight: 600;
+  margin-bottom: 4px;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.car-result-item__details {
+  color: #1b5e20;
+  font-size: 16px;
+  margin-bottom: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.car-result-item__label {
+  font-weight: 500;
+  color: #388e3c;
+  margin-right: 4px;
+}
+.car-result-item__value {
+  color: #333;
+  font-weight: 400;
+}
+.car-result-item__price {
+  color: #2e7d32;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 8px;
+  background: #e8f5e9;
+  border-radius: 6px;
+  padding: 4px 16px;
+  border: 1px solid #81c784;
+  display: inline-block;
+}

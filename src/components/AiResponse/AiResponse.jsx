@@ -1,14 +1,12 @@
 import React from 'react';
-
-
-import { Container, Title, Text } from './AiResponse.styles';
+import './AiResponse.css';
 
 export default function AiResponse({ aiResponse }) {
   if (!aiResponse) return null;
   return (
-    <Container>
-      <Title>Resposta da IA:</Title>
-      <Text>{aiResponse}</Text>
-    </Container>
+    <div className="ai-response">
+      <h4 className="ai-response__title">Resposta da IA:</h4>
+      <p className="ai-response__text">{aiResponse}</p>
+    </div>
   );
 }
