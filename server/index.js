@@ -2,39 +2,68 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const carsDatabase = require('./db/carsDatabase');
-const { genkit } = require('genkit');
-const { googleAI, textEmbedding004 } = require('@genkit-ai/google-genai');
-const admin = require('firebase-admin');
+const { devLocalIndexerRef, devLocalVectorstore, devLocalRetrieverRef } = require('@genkit-ai/dev-local-vectorstore');
+const { googleAI } = require('@genkit-ai/google-genai');
+const { z, genkit } = require('genkit');
+const { Document } = require('genkit/retriever');
 
-
-// Configure Genkit with Google AI
 const ai = genkit({ plugins: [googleAI( {apiKey: process.env.GOOGLE_API_KEY})] });
 
-
-// Inicializa Firebase Admin
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.applicationDefault(),
-    projectId: "carfinder-3aeec"
-  });
+let hfEmbedder;
+async function initEmbedder() {
+  const { pipeline } = await import('@xenova/transformers');
+  hfEmbedder = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
 }
-const db = admin.firestore();
 
-// Inicializa servidor normalmente
+async function getEmbedding(text) {
+  if (!hfEmbedder) throw new Error('Embedder HuggingFace não inicializado');
+  const result = await hfEmbedder(text);
+  return result[0][0];
+}
+// =============================
+// CarFinder AI - Backend
+// =============================
+// Este arquivo integra Express, IA (Genkit + Gemini), embeddings (HuggingFace) e busca de carros.
+// Cada seção está documentada para facilitar manutenção.
+// =============================
+// CarFinder AI - Backend
+// Documentação linha a linha: RAG, banco, IA, infra
+// =============================
+
+async function retrieveRelevantCars(prompt) {
+  const promptEmbedding = await getEmbedding(prompt);
+  const carsWithEmbeddings = await Promise.all(
+    carsDatabase.map(async (car) => {
+      const carText = `${car.marca} ${car.modelo}`;
+      let carEmbedding = [];
+      try {
+        carEmbedding = await getEmbedding(carText);
+      } catch (e) {}
+      return { car, embedding: carEmbedding };
+    })
+  );
+  const scored = carsWithEmbeddings
+    .filter(({ embedding }) => Array.isArray(embedding) && embedding.length > 0)
+    .map(({ car, embedding }) => ({
+      car,
+      score: cosineSimilarity(promptEmbedding, embedding)
+    }));
+  scored.sort((a, b) => b.score - a.score);
+  return scored.slice(0, 3).map(s => s.car);
+}
+
 function startServer() {
   const app = express();
   const PORT = process.env.PORT || 4000;
 
   app.use(cors());
   app.use(express.json());
-  console.log("debug");
-  // API endpoint para chat (usando base de dados e IA)
+
   app.post('/api/generate', async (req, res) => {
     try {
       const { prompt } = req.body;
-      if (!prompt) return res.status(400).json({ error: 'Prompt is required' });
+      if (!prompt) return res.status(400).json({ error: 'Prompt é obrigatório' });
 
-      // Schema Zod-like para carros
       const schema = `
         [
           {
@@ -48,20 +77,8 @@ function startServer() {
           }
         ]
       `;
-
-      // Busca relevante no Firestore: pega os carros que contêm o termo
-      const snapshot = await db.collection('cars').get();
-      const relevantCars = [];
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        // Busca por marca, modelo ou descrição
-        const searchString = `${data.marca} ${data.modelo}`.toLowerCase();
-        if (searchString.includes(prompt.toLowerCase())) {
-          relevantCars.push(data);
-        }
-      });
-      // Pega até 3 carros mais relevantes
-      const context = `Banco de dados de carros (JSON):\n${JSON.stringify(relevantCars.slice(0,3))}\n\n`;
+      const relevantCars = await retrieveRelevantCars(prompt);
+      const context = `Banco de dados de carros (JSON):\n${JSON.stringify(relevantCars)}\n\n`;
       const systemPrompt = `
         Responda APENAS com um array JSON de carros, SEM EXPLICAÇÃO, seguindo exatamente o seguinte schema:
         ${schema}
@@ -69,12 +86,12 @@ function startServer() {
         Pergunta do usuário: ${prompt}
       `;
 
+      // Corrige chamada: usar googleAI.generateText
       const { text } = await ai.generate({
         model: googleAI.model('gemini-2.5-flash'),
         prompt: context + systemPrompt
       });
 
-      // Tenta fazer parse do JSON retornado
       let cars = [];
       try {
         cars = JSON.parse(text);
@@ -83,16 +100,16 @@ function startServer() {
       }
       res.json({ cars });
     } catch (err) {
-      console.error('Error in /api/generate:', err);
-      res.status(500).json({ error: err.message || 'Internal server error' });
+      console.error('Erro em /api/generate:', err);
+      res.status(500).json({ error: err.message || 'Erro interno do servidor' });
     }
   });
 
-
   app.listen(PORT, () => {
-    console.log(`Server listening on http://localhost:${PORT}`);
+    console.log(`Servidor ouvindo em http://localhost:${PORT}`);
     console.log(`Carros na base de dados: ${carsDatabase.length}`);
   });
 }
 
-startServer();
+// Inicializar embedder antes de iniciar o servidor
+initEmbedder().then(startServer);
