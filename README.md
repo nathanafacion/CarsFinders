@@ -1,43 +1,40 @@
 
-# 🚗 CarFinder AI – Busca de Carros com IA, Firestore e Genkit
+## Prova de Conceito – CarFinder AI
 
-CarFinder AI é uma aplicação fullstack que permite buscar carros por marca, modelo ou ano, utilizando inteligência artificial (RAG com Genkit + Gemini) e banco de dados Firestore. O frontend é feito em React com styled-components, proporcionando uma experiência moderna, responsiva e profissional.
+Esta POC demonstra uma busca inteligente de carros usando RAG (Retrieval-Augmented Generation) com IA (Genkit + Gemini) e Firestore.
 
-## ✨ Funcionalidades
+### Como testar
 
-- 🔎 Busca inteligente de carros por texto (marca, modelo, ano)
-- 🤖 Respostas geradas por IA (Genkit + Gemini 2.5 Flash)
-- 🗃️ Dados reais de carros salvos no Firestore
-- 🧠 RAG (Retrieval-Augmented Generation) para contexto relevante
-- 🎨 Frontend React moderno com styled-components
-- 📱 Totalmente responsivo e pronto para produção
+1. Instale as dependências:
+   ```bash
+   yarn install
+   yarn --cwd server install
+   ```
+2. (Opcional) Popule o Firestore:
+   ```bash
+   cd server
+   node helpers/chunkFirebase.js
+   cd ..
+   ```
+3. Rode o backend:
+   ```bash
+   yarn --cwd server dev
+   ```
+4. Rode o frontend:
+   ```bash
+   yarn dev
+   ```
 
-## 🛠️ Tecnologias
+### O que esta POC faz
 
-- React 18
-- Styled Components
-- Node.js + Express
-- Genkit AI
-- Google Gemini (via Genkit)
-- Firestore (Firebase)
-- Vite
+- Recebe um texto de busca (ex: "Corolla 2020 flex")
+- Busca os carros mais similares no Firestore usando embeddings (RAG)
+- Gera resposta estruturada via IA (Genkit + Gemini)
+- Retorna um JSON com os carros mais relevantes
 
-## 📦 Instalação e Uso
+---
 
-```bash
-# Instale as dependências (raiz e /server)
-yarn install
-yarn --cwd server install
-
-# Popule o Firestore com os dados de carros (opcional, só na primeira vez)
-cd server
-node helpers/chunkFirebase.js
-cd ..
-
-# Rode o backend (porta 4000)
-yarn --cwd server dev
-
-# Rode o frontend (porta 3000)
+**Atenção:** Esta POC é para fins de demonstração técnica. Não use em produção sem ajustes de segurança, performance e custos de API.
 yarn dev
 ```
 
